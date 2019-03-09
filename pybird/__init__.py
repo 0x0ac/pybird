@@ -670,7 +670,8 @@ bogus undo:
         """
         sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         sock.connect(self.socket_file)
-        sock.send(query + "\n")
+        query_string = query+"\n"
+        sock.send(query_string.encode('utf-8'))
 
         data = ''
         prev_data = None
@@ -680,7 +681,7 @@ bogus undo:
                (data.find("\n0013") == -1) and
                (data.find("\n9001") == -1) and
                (data.find("\n8001") == -1)):
-            data += sock.recv(1024)
+            data += sock.recv(1024).decode('utf-8')
             if data == prev_data:
                 self.log.debug(data)
                 raise ValueError("Could not read additional data from BIRD")
